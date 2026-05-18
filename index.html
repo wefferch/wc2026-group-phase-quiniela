@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Predictor</title>
+
+<style>
+body { font-family: Arial; padding: 12px; background:#f5f5f5; }
+h2 { text-align:center; }
+
+.card { background:white; padding:15px; margin-bottom:15px; border-radius:12px; }
+
+input {
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  font-size:16px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.match {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.score input {
+  width:45px;
+  text-align:center;
+}
+
+button {
+  width:100%;
+  padding:16px;
+  font-size:18px;
+  background:#007bff;
+  color:white;
+  border:none;
+  border-radius:10px;
+}
+
+/* Accordion */
+.group-card { margin-bottom:12px; border-radius:12px; overflow:hidden; }
+.group-header {
+  background:#007bff;
+  color:white;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+}
+.group-body { display:none; background:white; padding:10px; }
+.group-body.active { display:block; }
+
+/* Banner */
+.banner {
+  text-align:center;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:10px;
+  font-weight:bold;
+}
+.locked { background:red; color:white; }
+.countdown { background:#222; color:#fff; }
+</style>
+</head>
+
+<body>
+
+<h2>World Cup 2026 Predictions</h2>
+
+<div id="statusBanner"></div>
+
+<div class="card">
+  <input id="name" placeholder="Full Name">
+  <input id="country" placeholder="Country">
+  <input id="phone" placeholder="Phone">
+  <input id="email" placeholder="Email">
+</div>
+
+<div id="matches"></div>
+
+<button id="submitBtn" onclick="submitPredictions()">Submit Predictions</button>
+
+<script>
+
+const API_URL = "PASTE_YOUR_SCRIPT_URL";
+
+// 🧠 Teams
+const teams = {
+  A1:"Mexico",A2:"South Africa",A3:"South Korea",A4:"Czech Republic",
+  B1:"Canada",B2:"Bosnia & Herzegovina",B3:"Qatar",B4:"Switzerland",
+  C1:"Brazil",C2:"Morocco",C3:"Haiti",C4:"Scotland",
+  D1:"United States",D2:"Paraguay",D3:"Australia",D4:"Türkiye",
+  E1:"Germany",E2:"Curaçao",E3:"Ivory Coast",E4:"Ecuador",
+  F1:"Netherlands",F2:"Japan",F3:"Sweden",F4:"Tunisia",
+  G1:"Belgium",G2:"Egypt",G3:"Iran",G4:"New Zealand",
+  H1:"Spain",H2:"Cape Verde",H3:"Saudi Arabia",H4:"Uruguay",
+  I1:"France",I2:"Senegal",I3:"Iraq",I4:"Norway",
+  J1:"Argentina",J2:"Algeria",J3:"Austria",J4:"Jordan",
+  K1:"Portugal",K2:"DR Congo",K3:"Uzbekistan",K4:"Colombia",
+  L1:"England",L2:"Croatia",L3:"Ghana",L4:"Panama"
+};
+
+// ⚽ Generate matches
+function generateMatches() {
+  const matches = [];
+  const groups = "ABCDEFGHIJKL";
+  let id = 1;
+
+  groups.split("").forEach((g, i) => {
+    const base = new Date("2026-06-11T20:00:00Z");
+
+    const combos = [
+      [`${g}1`, `${g}2`],
+      [`${g}3`, `${g}4`],
+      [`${g}1`, `${g}3`],
+      [`${g}2`, `${g}4`],
+      [`${g}1`, `${g}4`],
+      [`${g}2`, `${g}3`]
+    ];
+
+    combos.forEach((c, r) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i*2 + r);
+
+      matches.push({
+        id: id++,
+        group: g,
+        s1: c[0],
+        s2: c[1],
+        utc: d.toISOString()
+      });
+    });
+  });
+
+  return matches;
+}
+
+const matches = generateMatches();
+const firstMatchTime = new Date(matches[0].utc);
+
+// 🔒 Lock state
+let isLocked = false;
+const banner = document.getElementById("statusBanner");
+
+// ⏳ Countdown
+function updateCountdown() {
+  const now = new Date();
+  const diff = firstMatchTime - now;
+
+  if (diff <= 0) {
+    isLocked = true;
+    banner.innerHTML = `<div class="banner locked">Predictions are LOCKED</div>`;
+    disableInputs();
+    return;
+  }
+
+  const hrs = Math.floor(diff / 1000 / 60 / 60);
+  const mins = Math.floor((diff / 1000 / 60) % 60);
+  const secs = Math.floor((diff / 1000) % 60);
+
+  banner.innerHTML = `
+    <div class="banner countdown">
+      Locking in: ${hrs}h ${mins}m ${secs}s
+    </div>
+  `;
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// Disable inputs
+function disableInputs() {
+  document.querySelectorAll("input").forEach(i => i.disabled = true);
+  document.getElementById("submitBtn").disabled = true;
+}
+
+// 🧠 Score sanitization (CRITICAL)
+function sanitizeScore(value) {
+  const num = Number(value);
+  if (isNaN(num) || num < 0) return 0;
+  return Math.floor(num);
+}
+
+// ⛔ Block invalid key input
+document.addEventListener("keydown", function(e) {
+  if (e.target.type === "number") {
+    if (e.key === "-" || e.key === "e" || e.key === "+") {
+      e.preventDefault();
+    }
+  }
+});
+
+// ⏱ Time format
+function formatLocalTime(utc) {
+  return new Intl.DateTimeFormat([], {
+    dateStyle:"medium",
+    timeStyle:"short"
+  }).format(new Date(utc));
+}
+
+// 💾 Local storage
+const STORAGE_KEY = "wc_predictions";
+
+function saveLocal() {
+  const data = {};
+
+  matches.forEach(m => {
+    const h = sanitizeScore(document.getElementById(`h_${m.id}`)?.value);
+    const a = sanitizeScore(document.getElementById(`a_${m.id}`)?.value);
+
+    document.getElementById(`h_${m.id}`).value = h;
+    document.getElementById(`a_${m.id}`).value = a;
+
+    data[m.id] = { h, a };
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+// 🎨 Render
+const container = document.getElementById("matches");
+const grouped = {};
+
+matches.forEach(m => {
+  if (!grouped[m.group]) grouped[m.group] = [];
+  grouped[m.group].push(m);
+});
+
+Object.keys(grouped).forEach(group => {
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "group-card";
+
+  const header = document.createElement("div");
+  header.className = "group-header";
+  header.innerHTML = `Group ${group} <span>+</span>`;
+
+  const body = document.createElement("div");
+  body.className = "group-body";
+
+  if (group === "A") {
+    body.classList.add("active");
+    header.querySelector("span").textContent = "−";
+  }
+
+  header.onclick = () => {
+    const open = body.classList.contains("active");
+    body.classList.toggle("active");
+    header.querySelector("span").textContent = open ? "+" : "−";
+  };
+
+  grouped[group].forEach(m => {
+
+    const valH = sanitizeScore(saved[m.id]?.h ?? 0);
+    const valA = sanitizeScore(saved[m.id]?.a ?? 0);
+
+    const div = document.createElement("div");
+    div.className = "match";
+
+    div.innerHTML = `
+      <div>
+        <strong>${teams[m.s1]} vs ${teams[m.s2]}</strong><br>
+        <small>${formatLocalTime(m.utc)}</small>
+      </div>
+      <div class="score">
+        <input type="number" min="0" step="1" value="${valH}" id="h_${m.id}">
+        <input type="number" min="0" step="1" value="${valA}" id="a_${m.id}">
+      </div>
+    `;
+
+    body.appendChild(div);
+  });
+
+  wrapper.appendChild(header);
+  wrapper.appendChild(body);
+  container.appendChild(wrapper);
+});
+
+// 🏆 SCORING SYSTEM SECTION (accordion style)
+
+const scoringWrapper = document.createElement("div");
+scoringWrapper.className = "group-card";
+
+const scoringHeader = document.createElement("div");
+scoringHeader.className = "group-header";
+scoringHeader.innerHTML = `Scoring System / Sistema de Puntuacion <span>+</span>`;
+
+const scoringBody = document.createElement("div");
+scoringBody.className = "group-body";
+
+// Toggle behavior (same as groups)
+scoringHeader.onclick = () => {
+  const open = scoringBody.classList.contains("active");
+  scoringBody.classList.toggle("active");
+  scoringHeader.querySelector("span").textContent = open ? "+" : "−";
+};
+
+// Content
+scoringBody.innerHTML = `
+  <div style="line-height:1.6; font-size:14px;">
+    <p><strong>10 PTS.</strong> Exact Score (both teams' score match exactly) / Marcador exacto (acertar goles de ambos equipos) </p>
+    <p><strong>7 PTS.</strong> Winner and one teams' score / Ganador y goles de uno de los dos equipo</p>
+    <p><strong>5 PTS.</strong> Winner or Draw, no scores. Ganador o Empate, sin acertar goles</p>
+    <p><strong>2 PTS.</strong> Guessing score of one team, without guessing winner,draw / Acertar goles de un equipo sin acertar ganador,empate</p>
+  </div>
+`;
+
+scoringWrapper.appendChild(scoringHeader);
+scoringWrapper.appendChild(scoringBody);
+container.appendChild(scoringWrapper);
+
+// Auto-save
+document.addEventListener("input", saveLocal);
+
+// 🚀 Submit
+function submitPredictions() {
+
+  if (isLocked) {
+    alert("Predictions are locked");
+    return;
+  }
+
+  const payload = {
+    name: name.value,
+    country: country.value,
+    phone: phone.value,
+    email: email.value,
+    predictions: []
+  };
+
+  matches.forEach(m => {
+    payload.predictions.push({
+      matchId: m.id,
+      home: teams[m.s1],
+      away: teams[m.s2],
+      homeScore: sanitizeScore(document.getElementById(`h_${m.id}`).value),
+      awayScore: sanitizeScore(document.getElementById(`a_${m.id}`).value),
+      utc: m.utc,
+      localTime: formatLocalTime(m.utc)
+    });
+  });
+
+  fetch(API_URL, {
+    method:"POST",
+    body:JSON.stringify(payload)
+  })
+  .then(r=>r.json())
+  .then(()=>alert("Submitted!"));
+}
+
+</script>
+
+</body>
+</html>
