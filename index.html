@@ -299,7 +299,7 @@ scoringWrapper.className = "group-card";
 
 const scoringHeader = document.createElement("div");
 scoringHeader.className = "group-header";
-scoringHeader.innerHTML = `Scoring System / Sistema de Puntuacion <span>+</span>`;
+scoringHeader.innerHTML = `Scoring System / Puntuacion <span>+</span>`;
 
 const scoringBody = document.createElement("div");
 scoringBody.className = "group-body";
@@ -308,7 +308,7 @@ scoringBody.className = "group-body";
 scoringHeader.onclick = () => {
   const open = scoringBody.classList.contains("active");
   scoringBody.classList.toggle("active");
-  scoringHeader.querySelector("span").textContent = open ? "+" : "−";
+  scoringHeader.querySelector("span").textContent = open ? "+" : "x";
 };
 
 // Content
