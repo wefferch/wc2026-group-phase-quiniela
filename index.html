@@ -60,6 +60,7 @@ button {
   text-align:center;
   transition: transform 0.2s ease;
 }
+
 .group-body { display:none; background:white; padding:10px; }
 .group-body.active { display:block; }
 
@@ -99,7 +100,7 @@ const API_URL = "PASTE_YOUR_SCRIPT_URL";
 
 // 🧠 Teams
 const teams = {
-  A1:"Mexico",A2:"South Africa",A3:"South Korea",A4:"Czech Republic",
+  A1:"Mexico",A2:"S. Africa",A3:"S. Korea",A4:"Czech Rep",
   B1:"Canada",B2:"Bosnia & Herzegovina",B3:"Qatar",B4:"Switzerland",
   C1:"Brazil",C2:"Morocco",C3:"Haiti",C4:"Scotland",
   D1:"United States",D2:"Paraguay",D3:"Australia",D4:"Türkiye",
@@ -249,7 +250,7 @@ Object.keys(grouped).forEach(group => {
   const header = document.createElement("div");
   header.className = "group-header";
   header.innerHTML = `Group ${group} <span>+</span>`;
-  
+
   const body = document.createElement("div");
   body.className = "group-body";
 
@@ -342,6 +343,31 @@ function submitPredictions() {
     email: email.value,
     predictions: []
   };
+
+  matches.forEach(m => {
+    payload.predictions.push({
+      matchId: m.id,
+      home: teams[m.s1],
+      away: teams[m.s2],
+      homeScore: sanitizeScore(document.getElementById(`h_${m.id}`).value),
+      awayScore: sanitizeScore(document.getElementById(`a_${m.id}`).value),
+      utc: m.utc,
+      localTime: formatLocalTime(m.utc)
+    });
+  });
+
+  fetch(API_URL, {
+    method:"POST",
+    body:JSON.stringify(payload)
+  })
+  .then(r=>r.json())
+  .then(()=>alert("Submitted!"));
+}
+
+</script>
+
+</body>
+</html>
 
   matches.forEach(m => {
     payload.predictions.push({
