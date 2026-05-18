@@ -101,10 +101,10 @@ const API_URL = "PASTE_YOUR_SCRIPT_URL";
 // 🧠 Teams
 const teams = {
   A1:"Mexico",A2:"S Africa",A3:"S Korea",A4:"Czech Rep",
-  B1:"Canada",B2:"Bos & Herz",B3:"Qatar",B4:"Switzerland",
+  B1:"Canada",B2:"Bos&Herz",B3:"Qatar",B4:"Switzerland",
   C1:"Brazil",C2:"Morocco",C3:"Haiti",C4:"Scotland",
   D1:"USA",D2:"Paraguay",D3:"Australia",D4:"Turkiye",
-  E1:"Germany",E2:"Curaçao",E3:"Ivory Coast",E4:"Ecuador",
+  E1:"Germany",E2:"Curacao",E3:"Ivory Coast",E4:"Ecuador",
   F1:"Netherlands",F2:"Japan",F3:"Sweden",F4:"Tunisia",
   G1:"Belgium",G2:"Egypt",G3:"Iran",G4:"New Zealand",
   H1:"Spain",H2:"Cape Verde",H3:"S Arabia",H4:"Uruguay",
@@ -343,31 +343,6 @@ function submitPredictions() {
     email: email.value,
     predictions: []
   };
-
-  matches.forEach(m => {
-    payload.predictions.push({
-      matchId: m.id,
-      home: teams[m.s1],
-      away: teams[m.s2],
-      homeScore: sanitizeScore(document.getElementById(`h_${m.id}`).value),
-      awayScore: sanitizeScore(document.getElementById(`a_${m.id}`).value),
-      utc: m.utc,
-      localTime: formatLocalTime(m.utc)
-    });
-  });
-
-  fetch(API_URL, {
-    method:"POST",
-    body:JSON.stringify(payload)
-  })
-  .then(r=>r.json())
-  .then(()=>alert("Submitted!"));
-}
-
-</script>
-
-</body>
-</html>
 
   matches.forEach(m => {
     payload.predictions.push({
