@@ -239,8 +239,10 @@ Object.keys(grouped).forEach(group => {
 
   const header = document.createElement("div");
   header.className = "group-header";
-  header.innerHTML = `Group ${group} <span>+</span>`;
-
+  header.innerHTML = `
+  	<span>Group ${group}</span>
+  	<span class="toggle-icon">+</span>
+`	;
   const body = document.createElement("div");
   body.className = "group-body";
 
