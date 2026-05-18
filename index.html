@@ -256,13 +256,13 @@ Object.keys(grouped).forEach(group => {
 
   if (group === "A") {
     body.classList.add("active");
-    header.querySelector("span").textContent = "−";
+    header.querySelector("span").textContent = "x";
   }
 
   header.onclick = () => {
     const open = body.classList.contains("active");
     body.classList.toggle("active");
-    header.querySelector("span").textContent = open ? "+" : "−";
+    header.querySelector("span").textContent = open ? "+" : "x";
   };
 
   grouped[group].forEach(m => {
