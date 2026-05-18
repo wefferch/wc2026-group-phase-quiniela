@@ -49,7 +49,16 @@ button {
   padding:12px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   cursor:pointer;
+}
+
+.toggle-icon {
+  font-size:20px;
+  font-weight:bold;
+  width:24px;
+  text-align:center;
+  transition: transform 0.2s ease;
 }
 .group-body { display:none; background:white; padding:10px; }
 .group-body.active { display:block; }
@@ -239,10 +248,8 @@ Object.keys(grouped).forEach(group => {
 
   const header = document.createElement("div");
   header.className = "group-header";
-  header.innerHTML = `
-  	<span>Group ${group}</span>
-  	<span class="toggle-icon">+</span>
-`	;
+  header.innerHTML = `Group ${group} <span>+</span>`;
+  
   const body = document.createElement("div");
   body.className = "group-body";
 
