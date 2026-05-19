@@ -234,6 +234,11 @@ input:focus {
   text-align: center;
 }
 
+.city-name {
+  color: #6b7280;
+  font-size: 12px;
+}
+
 .score input {
   width: 100%;
   text-align: center;
@@ -419,42 +424,162 @@ const teams = {
   L1:"England",L2:"Croatia",L3:"Ghana",L4:"Panama"
 };
 
-// Generate matches
-function generateMatches() {
-  const matches = [];
-  const groups = "ABCDEFGHIJKL";
-  let id = 1;
+const matches = [
 
-  groups.split("").forEach((g, i) => {
-    const base = new Date("2026-06-11T20:00:00Z");
+  // GROUP A
+  { id:1, group:"A", s1:"Mexico", s2:"South Africa", city:"Mexico City", utc:"2026-06-11T15:00:00-04:00" },
+  { id:2, group:"A", s1:"South Korea", s2:"Czech Republic", city:"Guadalajara", utc:"2026-06-11T22:00:00-04:00" },
 
-    const combos = [
-      [`${g}1`, `${g}2`],
-      [`${g}3`, `${g}4`],
-      [`${g}1`, `${g}3`],
-      [`${g}2`, `${g}4`],
-      [`${g}1`, `${g}4`],
-      [`${g}2`, `${g}3`]
-    ];
+  // GROUP B
+  { id:3, group:"B", s1:"Canada", s2:"Bosnia & Herzegovina", city:"Toronto", utc:"2026-06-12T15:00:00-04:00" },
 
-    combos.forEach((c, r) => {
-      const d = new Date(base);
-      d.setDate(base.getDate() + i*2 + r);
+  // GROUP D
+  { id:4, group:"D", s1:"United States", s2:"Paraguay", city:"Los Angeles", utc:"2026-06-12T21:00:00-04:00" },
 
-      matches.push({
-        id: id++,
-        group: g,
-        s1: c[0],
-        s2: c[1],
-        utc: d.toISOString()
-      });
-    });
-  });
+  // GROUP C
+  { id:5, group:"C", s1:"Haiti", s2:"Scotland", city:"Boston", utc:"2026-06-13T21:00:00-04:00" },
 
-  return matches;
-}
+  // GROUP D
+  { id:6, group:"D", s1:"Australia", s2:"Türkiye", city:"Vancouver", utc:"2026-06-13T00:00:00-04:00" },
 
-const matches = generateMatches();
+  // GROUP C
+  { id:7, group:"C", s1:"Brazil", s2:"Morocco", city:"New York New Jersey", utc:"2026-06-13T18:00:00-04:00" },
+
+  // GROUP B
+  { id:8, group:"B", s1:"Qatar", s2:"Switzerland", city:"San Francisco Bay Area", utc:"2026-06-13T15:00:00-04:00" },
+
+  // GROUP E
+  { id:9, group:"E", s1:"Ivory Coast", s2:"Ecuador", city:"Philadelphia", utc:"2026-06-14T19:00:00-04:00" },
+  { id:10, group:"E", s1:"Germany", s2:"Curaçao", city:"Houston", utc:"2026-06-14T13:00:00-04:00" },
+
+  // GROUP F
+  { id:11, group:"F", s1:"Netherlands", s2:"Japan", city:"Dallas", utc:"2026-06-14T16:00:00-04:00" },
+  { id:12, group:"F", s1:"Sweden", s2:"Tunisia", city:"Monterrey", utc:"2026-06-14T22:00:00-04:00" },
+
+  // GROUP H
+  { id:13, group:"H", s1:"Saudi Arabia", s2:"Uruguay", city:"Miami", utc:"2026-06-15T18:00:00-04:00" },
+  { id:14, group:"H", s1:"Spain", s2:"Cape Verde", city:"Atlanta", utc:"2026-06-15T12:00:00-04:00" },
+
+  // GROUP G
+  { id:15, group:"G", s1:"Iran", s2:"New Zealand", city:"Los Angeles", utc:"2026-06-15T21:00:00-04:00" },
+  { id:16, group:"G", s1:"Belgium", s2:"Egypt", city:"Seattle", utc:"2026-06-15T15:00:00-04:00" },
+
+  // GROUP I
+  { id:17, group:"I", s1:"France", s2:"Senegal", city:"New York New Jersey", utc:"2026-06-16T15:00:00-04:00" },
+  { id:18, group:"I", s1:"Iraq", s2:"Norway", city:"Boston", utc:"2026-06-16T18:00:00-04:00" },
+
+  // GROUP J
+  { id:19, group:"J", s1:"Argentina", s2:"Algeria", city:"Kansas City", utc:"2026-06-16T21:00:00-04:00" },
+  { id:20, group:"J", s1:"Austria", s2:"Jordan", city:"San Francisco Bay Area", utc:"2026-06-16T00:00:00-04:00" },
+
+  // GROUP L
+  { id:21, group:"L", s1:"Ghana", s2:"Panama", city:"Toronto", utc:"2026-06-17T19:00:00-04:00" },
+  { id:22, group:"L", s1:"England", s2:"Croatia", city:"Dallas", utc:"2026-06-17T16:00:00-04:00" },
+
+  // GROUP K
+  { id:23, group:"K", s1:"Portugal", s2:"DR Congo", city:"Houston", utc:"2026-06-17T13:00:00-04:00" },
+  { id:24, group:"K", s1:"Uzbekistan", s2:"Colombia", city:"Mexico City", utc:"2026-06-17T22:00:00-04:00" },
+
+  // GROUP A
+  { id:25, group:"A", s1:"Czech Republic", s2:"South Africa", city:"Atlanta", utc:"2026-06-18T12:00:00-04:00" },
+
+  // GROUP B
+  { id:26, group:"B", s1:"Switzerland", s2:"Bosnia & Herzegovina", city:"Los Angeles", utc:"2026-06-18T15:00:00-04:00" },
+  { id:27, group:"B", s1:"Canada", s2:"Qatar", city:"Vancouver", utc:"2026-06-18T18:00:00-04:00" },
+
+  // GROUP A
+  { id:28, group:"A", s1:"Mexico", s2:"South Korea", city:"Guadalajara", utc:"2026-06-18T21:00:00-04:00" },
+
+  // GROUP C
+  { id:29, group:"C", s1:"Brazil", s2:"Haiti", city:"Philadelphia", utc:"2026-06-19T20:30:00-04:00" },
+  { id:30, group:"C", s1:"Scotland", s2:"Morocco", city:"Boston", utc:"2026-06-19T18:00:00-04:00" },
+
+  // GROUP D
+  { id:31, group:"D", s1:"Türkiye", s2:"Paraguay", city:"San Francisco Bay Area", utc:"2026-06-19T23:00:00-04:00" },
+  { id:32, group:"D", s1:"United States", s2:"Australia", city:"Seattle", utc:"2026-06-19T15:00:00-04:00" },
+
+  // GROUP E
+  { id:33, group:"E", s1:"Germany", s2:"Ivory Coast", city:"Toronto", utc:"2026-06-20T16:00:00-04:00" },
+  { id:34, group:"E", s1:"Ecuador", s2:"Curaçao", city:"Kansas City", utc:"2026-06-20T20:00:00-04:00" },
+
+  // GROUP F
+  { id:35, group:"F", s1:"Netherlands", s2:"Sweden", city:"Houston", utc:"2026-06-20T13:00:00-04:00" },
+  { id:36, group:"F", s1:"Tunisia", s2:"Japan", city:"Monterrey", utc:"2026-06-20T00:00:00-04:00" },
+
+  // GROUP H
+  { id:37, group:"H", s1:"Uruguay", s2:"Cape Verde", city:"Miami", utc:"2026-06-21T18:00:00-04:00" },
+  { id:38, group:"H", s1:"Spain", s2:"Saudi Arabia", city:"Atlanta", utc:"2026-06-21T12:00:00-04:00" },
+
+  // GROUP G
+  { id:39, group:"G", s1:"Belgium", s2:"Iran", city:"Los Angeles", utc:"2026-06-21T15:00:00-04:00" },
+  { id:40, group:"G", s1:"New Zealand", s2:"Egypt", city:"Vancouver", utc:"2026-06-21T21:00:00-04:00" },
+
+  // GROUP I
+  { id:41, group:"I", s1:"Norway", s2:"Senegal", city:"New York New Jersey", utc:"2026-06-22T20:00:00-04:00" },
+  { id:42, group:"I", s1:"France", s2:"Iraq", city:"Philadelphia", utc:"2026-06-22T17:00:00-04:00" },
+
+  // GROUP J
+  { id:43, group:"J", s1:"Argentina", s2:"Austria", city:"Dallas", utc:"2026-06-22T13:00:00-04:00" },
+  { id:44, group:"J", s1:"Jordan", s2:"Algeria", city:"San Francisco Bay Area", utc:"2026-06-22T23:00:00-04:00" },
+
+  // GROUP L
+  { id:45, group:"L", s1:"England", s2:"Ghana", city:"Boston", utc:"2026-06-23T16:00:00-04:00" },
+  { id:46, group:"L", s1:"Panama", s2:"Croatia", city:"Toronto", utc:"2026-06-23T19:00:00-04:00" },
+
+  // GROUP K
+  { id:47, group:"K", s1:"Portugal", s2:"Uzbekistan", city:"Houston", utc:"2026-06-23T13:00:00-04:00" },
+  { id:48, group:"K", s1:"Colombia", s2:"DR Congo", city:"Guadalajara", utc:"2026-06-23T22:00:00-04:00" },
+
+  // GROUP C
+  { id:49, group:"C", s1:"Scotland", s2:"Brazil", city:"Miami", utc:"2026-06-24T18:00:00-04:00" },
+  { id:50, group:"C", s1:"Morocco", s2:"Haiti", city:"Atlanta", utc:"2026-06-24T18:00:00-04:00" },
+
+  // GROUP B
+  { id:51, group:"B", s1:"Switzerland", s2:"Canada", city:"Vancouver", utc:"2026-06-24T15:00:00-04:00" },
+  { id:52, group:"B", s1:"Bosnia & Herzegovina", s2:"Qatar", city:"Seattle", utc:"2026-06-24T15:00:00-04:00" },
+
+  // GROUP A
+  { id:53, group:"A", s1:"Czech Republic", s2:"Mexico", city:"Mexico City", utc:"2026-06-24T21:00:00-04:00" },
+  { id:54, group:"A", s1:"South Africa", s2:"South Korea", city:"Monterrey", utc:"2026-06-24T21:00:00-04:00" },
+
+  // GROUP E
+  { id:55, group:"E", s1:"Curaçao", s2:"Ivory Coast", city:"Philadelphia", utc:"2026-06-25T16:00:00-04:00" },
+  { id:56, group:"E", s1:"Ecuador", s2:"Germany", city:"New York New Jersey", utc:"2026-06-25T16:00:00-04:00" },
+
+  // GROUP F
+  { id:57, group:"F", s1:"Japan", s2:"Sweden", city:"Dallas", utc:"2026-06-25T19:00:00-04:00" },
+  { id:58, group:"F", s1:"Tunisia", s2:"Netherlands", city:"Kansas City", utc:"2026-06-25T19:00:00-04:00" },
+
+  // GROUP D
+  { id:59, group:"D", s1:"Türkiye", s2:"United States", city:"Los Angeles", utc:"2026-06-25T22:00:00-04:00" },
+  { id:60, group:"D", s1:"Paraguay", s2:"Australia", city:"San Francisco Bay Area", utc:"2026-06-25T22:00:00-04:00" },
+
+  // GROUP I
+  { id:61, group:"I", s1:"Norway", s2:"France", city:"Boston", utc:"2026-06-26T15:00:00-04:00" },
+  { id:62, group:"I", s1:"Senegal", s2:"Iraq", city:"Toronto", utc:"2026-06-26T15:00:00-04:00" },
+
+  // GROUP G
+  { id:63, group:"G", s1:"Egypt", s2:"Iran", city:"Seattle", utc:"2026-06-26T23:00:00-04:00" },
+  { id:64, group:"G", s1:"New Zealand", s2:"Belgium", city:"Vancouver", utc:"2026-06-26T23:00:00-04:00" },
+
+  // GROUP H
+  { id:65, group:"H", s1:"Cape Verde", s2:"Saudi Arabia", city:"Houston", utc:"2026-06-26T20:00:00-04:00" },
+  { id:66, group:"H", s1:"Uruguay", s2:"Spain", city:"Guadalajara", utc:"2026-06-26T20:00:00-04:00" },
+
+  // GROUP L
+  { id:67, group:"L", s1:"Panama", s2:"England", city:"New York New Jersey", utc:"2026-06-27T17:00:00-04:00" },
+  { id:68, group:"L", s1:"Croatia", s2:"Ghana", city:"Philadelphia", utc:"2026-06-27T17:00:00-04:00" },
+
+  // GROUP J
+  { id:69, group:"J", s1:"Algeria", s2:"Austria", city:"Kansas City", utc:"2026-06-27T22:00:00-04:00" },
+  { id:70, group:"J", s1:"Jordan", s2:"Argentina", city:"Dallas", utc:"2026-06-27T22:00:00-04:00" },
+
+  // GROUP K
+  { id:71, group:"K", s1:"Colombia", s2:"Portugal", city:"Miami", utc:"2026-06-27T19:30:00-04:00" },
+  { id:72, group:"K", s1:"DR Congo", s2:"Uzbekistan", city:"Atlanta", utc:"2026-06-27T19:30:00-04:00" }
+
+];
+
 const firstMatchTime = new Date(matches[0].utc);
 
 let isLocked = false;
@@ -588,10 +713,10 @@ Object.keys(grouped).forEach(group => {
     div.className = "match";
 
     div.innerHTML = `
-      <div class="team-name">${teams[m.s1]}</div>
+      <div class="team-name">${m.s1}</div>
       <div class="vs-label">vs</div>
-      <div class="team-name">${teams[m.s2]}</div>
-      <div class="match-time">${formatLocalTime(m.utc)}</div>
+      <div class="team-name">${m.s2}</div>
+      <div class="match-time">${formatLocalTime(m.utc)}<br><span class="city-name">${m.city}</span></div>
       <div class="score home-score">
         <input class="score-input" type="number" min="0" step="1" value="${valH}" id="h_${m.id}">
       </div>
@@ -778,8 +903,8 @@ function submitPredictions() {
   matches.forEach(m => {
     payload.predictions.push({
       matchId: m.id,
-      home: teams[String(m.s1).trim()],
-      away: teams[String(m.s2).trim()],
+      home: m.s1,
+      away: m.s2,
       homeScore: sanitizeScore(document.getElementById(`h_${m.id}`).value),
       awayScore: sanitizeScore(document.getElementById(`a_${m.id}`).value),
       utc: m.utc,
@@ -802,4 +927,5 @@ function submitPredictions() {
 
 </body>
 </html>
+
 
