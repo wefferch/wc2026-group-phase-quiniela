@@ -1,96 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>World Cup 2026 Predictor</title>
 
 <style>
-body { font-family: Arial; padding: 12px; background:#f5f5f5; }
-h2 { text-align:center; }
+* {
+  box-sizing: border-box;
+}
 
-.card { background:white; padding:15px; margin-bottom:15px; border-radius:12px; }
+body {
+  margin: 0;
+  padding: 18px;
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  margin-bottom: 20px;
+}
+
+.hero-logo {
+  width: 260px;
+  max-width: 42vw;
+  display: block;
+}
+
+.hero-divider {
+  width: 1px;
+  height: 230px;
+  background: #c7ccd6;
+}
+
+.hero-title h1 {
+  margin: 0;
+  font-size: clamp(42px, 6vw, 82px);
+  line-height: 0.96;
+  color: #0b214f;
+  font-weight: 900;
+  letter-spacing: -2px;
+}
+
+.hero-title h2 {
+  margin: 8px 0 0;
+  font-size: clamp(30px, 4vw, 56px);
+  line-height: 1;
+  color: #0b214f;
+  font-weight: 800;
+}
+
+/* COUNTDOWN */
+#statusBanner {
+  margin-bottom: 16px;
+}
+
+.banner {
+  background: linear-gradient(90deg, #0a172d, #0f2445, #0a172d);
+  color: white;
+  border-radius: 10px;
+  padding: 18px 22px;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr 1.6fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.lock-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  background: white;
+  color: #0f2445;
+  border-radius: 50%;
+  font-size: 28px;
+  margin-right: 14px;
+}
+
+.lock-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.count-item {
+  text-align: center;
+}
+
+.count-number {
+  display: block;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.count-text {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.lock-message {
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.locked {
+  background: linear-gradient(90deg, #b91c1c, #dc2626);
+  text-align: center;
+}
+
+/* FORM */
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+.participant-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.field label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
 
 input {
-  width:100%;
-  padding:12px;
-  margin-bottom:10px;
-  font-size:16px;
-  border-radius:8px;
-  border:1px solid #ccc;
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 0;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
 }
 
-.match {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-.score input { width:45px; text-align:center; }
-
-button {
-  width:100%;
-  padding:16px;
-  font-size:18px;
-  background:#007bff;
-  color:white;
-  border:none;
-  border-radius:10px;
+/* ACCORDION */
+.group-card {
+  margin-bottom: 6px;
+  border-radius: 9px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
-
-/* Accordion */
-.group-card { margin-bottom:12px; border-radius:12px; overflow:hidden; }
 
 .group-header {
-  background:#007bff;
-  color:white;
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
+  background: linear-gradient(90deg, #0047cc, #003399);
+  color: white;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 18px;
 }
 
 .toggle-icon {
-  font-size:20px;
-  font-weight:bold;
-  width:24px;
-  text-align:center;
+  font-size: 26px;
+  font-weight: bold;
+  width: 28px;
+  text-align: center;
   transition: transform 0.2s ease;
 }
 
-.group-body { display:none; background:white; padding:10px; }
-.group-body.active { display:block; }
-
-/* Banner */
-.banner {
-  text-align:center;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:10px;
-  font-weight:bold;
+.group-body {
+  display: none;
+  background: white;
+  padding: 10px 20px;
 }
-.locked { background:red; color:white; }
-.countdown { background:#222; color:#fff; }
+
+.group-body.active {
+  display: block;
+}
+
+/* MATCH ROWS */
+.match {
+  display: grid;
+  grid-template-columns: 1.1fr 44px 1.1fr 1.25fr 90px 20px 90px;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.match:last-child {
+  border-bottom: none;
+}
+
+.team-name {
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.vs-label,
+.dash-label {
+  text-align: center;
+  font-weight: 700;
+  color: #374151;
+}
+
+.match-time {
+  color: #4b5563;
+  font-size: 14px;
+  text-align: center;
+}
+
+.score input {
+  width: 100%;
+  text-align: center;
+  padding: 9px 8px;
+  font-size: 16px;
+}
+
+/* INFO SECTIONS */
+.info-content {
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.info-content p {
+  margin: 9px 0;
+}
+
+.info-content ul {
+  margin-top: 6px;
+  padding-left: 22px;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 16px;
+  font-size: 19px;
+  background: linear-gradient(90deg, #0052cc, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.24);
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  body {
+    padding: 12px;
+  }
+
+  .hero {
+    justify-content: center;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .hero-divider {
+    display: none;
+  }
+
+  .hero-logo {
+    width: 170px;
+    max-width: 100%;
+  }
+
+  .hero-title {
+    width: 100%;
+  }
+
+  .participant-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .countdown-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .lock-label,
+  .lock-message {
+    grid-column: 1 / -1;
+  }
+
+  .match {
+    grid-template-columns: 1fr 28px 1fr;
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  .match-time {
+    grid-column: 1 / -1;
+    order: 4;
+  }
+
+  .score {
+    width: 100%;
+  }
+
+  .score.home-score {
+    grid-column: 1 / 2;
+    order: 5;
+  }
+
+  .dash-label {
+    order: 6;
+  }
+
+  .score.away-score {
+    grid-column: 3 / 4;
+    order: 7;
+  }
+
+  .team-name {
+    text-align: center;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<h2>World Cup 2026 Predictions</h2>
+<div class="page">
 
-<div id="statusBanner"></div>
+  <div class="hero">
+    <img class="hero-logo" src="logo.png" alt="World Cup 2026 Quiniela Familiar">
+    <div class="hero-divider"></div>
+    <div class="hero-title">
+      <h1>World Cup 2026</h1>
+      <h2>Predictions</h2>
+    </div>
+  </div>
 
-<div class="card">
-  <input id="name" placeholder="Full Name">
-  <input id="country" placeholder="Country">
-  <input id="phone" placeholder="Phone">
-  <input id="email" placeholder="Email">
+  <div id="statusBanner"></div>
+
+  <div class="card">
+    <div class="participant-grid">
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input id="name" placeholder="Enter your full name" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="country">Country</label>
+        <input id="country" placeholder="Enter your country" autocomplete="country-name">
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input id="phone" type="tel" placeholder="Enter your phone number" autocomplete="tel">
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="Enter your email address" autocomplete="email">
+      </div>
+    </div>
+  </div>
+
+  <div id="matches"></div>
+
+  <button id="submitBtn" onclick="submitPredictions()">✈ Submit Predictions</button>
+
 </div>
-
-<div id="matches"></div>
-
-<button id="submitBtn" onclick="submitPredictions()">Submit Predictions</button>
 
 <script>
 
@@ -165,11 +472,23 @@ function updateCountdown() {
     return;
   }
 
-  const hrs = Math.floor(diff / 1000 / 60 / 60);
-  const mins = Math.floor((diff / 1000 / 60) % 60);
-  const secs = Math.floor((diff / 1000) % 60);
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hrs = Math.floor((totalSeconds % 86400) / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
 
-  banner.innerHTML = `<div class="banner countdown">Locking in: ${hrs}h ${mins}m ${secs}s</div>`;
+  banner.innerHTML = `
+    <div class="banner countdown">
+      <div class="countdown-grid">
+        <div class="lock-label"><span class="lock-icon">🔒</span> Locking in:</div>
+        <div class="count-item"><span class="count-number">${days}</span><span class="count-text">days</span></div>
+        <div class="count-item"><span class="count-number">${hrs}</span><span class="count-text">hours</span></div>
+        <div class="count-item"><span class="count-number">${mins}:${String(secs).padStart(2, "0")}</span><span class="count-text">min:sec</span></div>
+        <div class="lock-message">Predictions will be LOCKED at the start of the first match.</div>
+      </div>
+    </div>
+  `;
 }
 
 setInterval(updateCountdown, 1000);
@@ -269,13 +588,16 @@ Object.keys(grouped).forEach(group => {
     div.className = "match";
 
     div.innerHTML = `
-      <div>
-        <strong>${teams[m.s1]} vs ${teams[m.s2]}</strong><br>
-        <small>${formatLocalTime(m.utc)}</small>
+      <div class="team-name">${teams[m.s1]}</div>
+      <div class="vs-label">vs</div>
+      <div class="team-name">${teams[m.s2]}</div>
+      <div class="match-time">${formatLocalTime(m.utc)}</div>
+      <div class="score home-score">
+        <input class="score-input" type="number" min="0" step="1" value="${valH}" id="h_${m.id}">
       </div>
-      <div class="score">
-        <input type="number" min="0" step="1" value="${valH}" id="h_${m.id}">
-        <input type="number" min="0" step="1" value="${valA}" id="a_${m.id}">
+      <div class="dash-label">-</div>
+      <div class="score away-score">
+        <input class="score-input" type="number" min="0" step="1" value="${valA}" id="a_${m.id}">
       </div>
     `;
 
@@ -294,7 +616,7 @@ scoringWrapper.className = "group-card";
 const scoringHeader = document.createElement("div");
 scoringHeader.className = "group-header";
 scoringHeader.innerHTML = `
-  <span>Scoring System / Puntuacion</span>
+  <span>🏆 Scoring System / Puntuacion</span>
   <span class="toggle-icon">+</span>
 `;
 
@@ -310,7 +632,7 @@ scoringHeader.onclick = () => {
 };
 
 scoringBody.innerHTML = `
-  <div style="line-height:1.6; font-size:14px;">
+  <div class="info-content">
     <p><strong>10 PTS.</strong> Exact Score (both teams match exactly) / Marcador exacto</p>
     <p><strong>7 PTS.</strong> Winner + one score / Ganador + goles de un equipo</p>
     <p><strong>5 PTS.</strong> Winner or Draw only / Ganador o empate</p>
@@ -329,7 +651,7 @@ prizesWrapper.className = "group-card";
 const prizesHeader = document.createElement("div");
 prizesHeader.className = "group-header";
 prizesHeader.innerHTML = `
-  <span>Prizes / Premios</span>
+  <span>🎁 Prizes / Premios</span>
   <span class="toggle-icon">+</span>
 `;
 
@@ -350,23 +672,15 @@ prizesHeader.onclick = () => {
 
 // Content
 prizesBody.innerHTML = `
-  <div style="line-height:1.8; font-size:14px;">
-    
-    <p>
-      🥇 <strong>1st Place / Primer Lugar</strong><br>
-      65% of prize pool / 65% del monto acumulado
-    </p>
+  <div class="info-content">
+    <p>🥇 <strong>1st Place / Primer Lugar</strong><br>
+    65% of prize pool / 65% del monto acumulado</p>
 
-    <p>
-      🥈 <strong>2nd Place / Segundo Lugar</strong><br>
-      20% of prize pool / 20% del monto acumulado
-    </p>
+    <p>🥈 <strong>2nd Place / Segundo Lugar</strong><br>
+    20% of prize pool / 20% del monto acumulado</p>
 
-    <p>
-      🥉 <strong>3rd Place / Tercer Lugar</strong><br>
-      15% of prize pool / 15% del monto acumulado
-    </p>
-
+    <p>🥉 <strong>3rd Place / Tercer Lugar</strong><br>
+    15% of prize pool / 15% del monto acumulado</p>
   </div>
 `;
 
@@ -383,7 +697,7 @@ paymentWrapper.className = "group-card";
 const paymentHeader = document.createElement("div");
 paymentHeader.className = "group-header";
 paymentHeader.innerHTML = `
-  <span>Payment Instructions / Instrucciones de Pago</span>
+  <span>💳 Payment Instructions / Instrucciones de Pago</span>
   <span class="toggle-icon">+</span>
 `;
 
@@ -399,7 +713,7 @@ paymentHeader.onclick = () => {
 };
 
 paymentBody.innerHTML = `
-  <div style="line-height:1.7; font-size:14px;">
+  <div class="info-content">
     <p><strong>1.</strong> Participation Fee: <strong>US$10 / AU$14</strong></p>
 
     <p><strong>2.</strong> Payment Methods:</p>
